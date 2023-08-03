@@ -70,8 +70,15 @@ ostream& operator<<(ostream &ostream, const pair<U,V> &X){
 void solve(){
     ll n;
     cin>>n;
-    
-
+    vt<ll> res(n+1);
+    res[1] = 0, res[2] = 6, res[3] = 28, res[4] = 96;
+    ll i = 5, itr = 1, attack = 39;
+    while(i<= n){
+        attack += 10 + (i-4)*4 + 9 + (i-5)*4 + (i + i-1);
+        res[i] = i*i * (i*i + 1)/ 2 - attack - ++itr;
+        i++;
+    }
+    for(ll k = 1; k<= n; ++k)cout<<res[k]<<"\n";
 }
 int main(){
     speed_;
