@@ -66,28 +66,18 @@ ostream& operator<<(ostream &ostream, const pair<U,V> &X){
 }
 
 /**************************************************************************************/
-vt<bool> generator(ll e, ll n){
-    if(e == 0)return vt<bool>(n, 0);
-    vt<bool> num(n, 0), res(n, 0);
-    ll i = n-1;
-    while(e){
-        num[i--] = e%2;
-        e/=2;
-    }
-    res[0] = num[0];
-    loopP(i, 1, n){
-        res[i] = num[i-1] ^ num[i];
-    }
-    return res;
+void solve(ll n, ll t1, ll t2, ll t3){
+    if(n == 0)return;
+    solve(n-1, t1, t3, t2);
+    cout<<t1<<" "<<t3<<endl;
+    solve(n-1, t2, t1, t3);
 }
+
 void solve(){
     ll n;
     cin>>n;
-    loopP(i,0,(1<<n)){
-        vt<bool> gc = generator(i, n);
-        for(ll j = 0; j< n; ++j)cout<<gc[j];
-        cout<<endl;
-    }
+    cout<<(1<<n)-1<<endl;
+    solve(n, 1, 2, 3);
 }
 int main(){
     speed_;

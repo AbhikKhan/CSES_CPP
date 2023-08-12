@@ -66,28 +66,32 @@ ostream& operator<<(ostream &ostream, const pair<U,V> &X){
 }
 
 /**************************************************************************************/
-vt<bool> generator(ll e, ll n){
-    if(e == 0)return vt<bool>(n, 0);
-    vt<bool> num(n, 0), res(n, 0);
-    ll i = n-1;
-    while(e){
-        num[i--] = e%2;
-        e/=2;
+set<string> res;
+
+void helper(string s, ll n, vector<ll>& freq){
+    if(s.length() == n){
+        res.insert(s);
+        return;
     }
-    res[0] = num[0];
-    loopP(i, 1, n){
-        res[i] = num[i-1] ^ num[i];
+    for(ll i = 0; i< 26; ++i){
+        if(freq[i]){
+            s += ('a' + i);
+            freq[i]--;
+            helper(s, n, freq);
+            freq[i]++;
+            s.pop_back();
+        }
     }
-    return res;
 }
+
 void solve(){
-    ll n;
-    cin>>n;
-    loopP(i,0,(1<<n)){
-        vt<bool> gc = generator(i, n);
-        for(ll j = 0; j< n; ++j)cout<<gc[j];
-        cout<<endl;
-    }
+    string str;
+    cin>>str;
+    vt<ll> f(26);
+    for(auto c: str)f[c-'a']++;
+    helper("", str.length(), f);
+    cout<<res.size()<<endl;
+    for(auto s: res)cout<<s<<endl;
 }
 int main(){
     speed_;

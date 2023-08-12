@@ -66,28 +66,36 @@ ostream& operator<<(ostream &ostream, const pair<U,V> &X){
 }
 
 /**************************************************************************************/
-vt<bool> generator(ll e, ll n){
-    if(e == 0)return vt<bool>(n, 0);
-    vt<bool> num(n, 0), res(n, 0);
-    ll i = n-1;
-    while(e){
-        num[i--] = e%2;
-        e/=2;
-    }
-    res[0] = num[0];
-    loopP(i, 1, n){
-        res[i] = num[i-1] ^ num[i];
-    }
-    return res;
-}
 void solve(){
-    ll n;
-    cin>>n;
-    loopP(i,0,(1<<n)){
-        vt<bool> gc = generator(i, n);
-        for(ll j = 0; j< n; ++j)cout<<gc[j];
-        cout<<endl;
+    string str;
+    cin>>str;
+    ll n = str.length();
+    string palin = "";
+
+    vt<ll> freq(26);
+    loopA(c, str){
+        freq[c-'A']++;
     }
+    ll o = 0;
+    char c = '-';
+    loopP(i, 0, 26){
+        if(freq[i]%2 == 1){
+            if(++o == 2){
+                cout<<"NO SOLUTION\n";
+                return;
+            }
+            c = 'A'+i;
+        }
+        ll t = freq[i]/ 2;
+        palin += string(t, 'A'+i);
+    }
+    string rev = palin;
+    reverse(all(rev));
+    if(c != '-'){
+        palin = palin + c;
+    }
+    palin += rev;
+    cout<<palin<<endl;
 }
 int main(){
     speed_;

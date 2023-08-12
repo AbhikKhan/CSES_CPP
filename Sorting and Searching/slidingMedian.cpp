@@ -66,28 +66,66 @@ ostream& operator<<(ostream &ostream, const pair<U,V> &X){
 }
 
 /**************************************************************************************/
-vt<bool> generator(ll e, ll n){
-    if(e == 0)return vt<bool>(n, 0);
-    vt<bool> num(n, 0), res(n, 0);
-    ll i = n-1;
-    while(e){
-        num[i--] = e%2;
-        e/=2;
+vector<ll> medianSlidingWindow(vector<ll>& nums, ll k) {
+    set<ll, function<bool(ll, ll)>> ms(
+        [nums](ll i, ll j) {
+            return nums[i] == nums[j]? i< j: nums[i]< nums[j];
+        }
+    );
+    ll n = nums.size();
+    vector<ll> res;
+    
+    for(ll i = 0; i< k; ++i)ms.insert(i);
+    
+    ll med_ind = (k+1)/ 2;
+    auto med = ms.begin();
+    
+    for(ll i = 0; i< med_ind-1; ++i)med++;
+    
+    if(k%2 == 1)res.push_back(nums[*med]);
+    else{
+        auto next = med;
+        next++;
+        ll d = min(nums[*med], nums[*next]);
+        res.push_back(d);
     }
-    res[0] = num[0];
-    loopP(i, 1, n){
-        res[i] = num[i-1] ^ num[i];
+    
+    for(ll i = k; i< n; ++i){
+        ms.insert(i);
+        if(nums[i] >= nums[*med]){
+            if(nums[i-k] <= nums[*med]){
+                med++;
+            }
+            
+        }
+        else{
+            if(nums[i-k] >= nums[*med]){
+                med--;
+            }
+            if(*med == i-k)med++;
+        }
+        
+        ms.erase(i-k);
+        
+        if(k%2 == 1)res.push_back(nums[*med]);
+        else{
+            auto next = med;
+            next++;
+            ll d = min(nums[*med], nums[*next]);
+            res.push_back(d);
+        }
     }
     return res;
 }
+
+
 void solve(){
-    ll n;
-    cin>>n;
-    loopP(i,0,(1<<n)){
-        vt<bool> gc = generator(i, n);
-        for(ll j = 0; j< n; ++j)cout<<gc[j];
-        cout<<endl;
-    }
+    ll n, k;
+    cin>>n>>k;
+    vt<ll> nums(n);
+    cin>>nums;
+    vt<ll> res = medianSlidingWindow(nums, k);
+    cout<<res<<endl;
 }
 int main(){
     speed_;
