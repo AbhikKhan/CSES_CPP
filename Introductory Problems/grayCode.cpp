@@ -88,7 +88,6 @@ void solve(){
         for(ll j = 0; j< n; ++j)cout<<gc[j];
         cout<<endl;
     }
-
 }
 int main(){
     speed_;
