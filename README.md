@@ -14,18 +14,6 @@ If a problem requires an input file, you will find it in the repository named af
 
 For example, if the problem name is "Apple Division", the input file will be named `appleDivision_input.txt`.
 
-## Table of Contents
-
-Below is a list of problems I've solved along with links to their respective solutions:
-
-1. [Problem 1 - ProblemName](./problemName.cpp)
-   - [Input File - problemName_input.txt](./problemName_input.txt)
-
-2. [Problem 2 - AnotherProblem](./anotherProblem.cpp)
-   - [Input File - anotherProblem_input.txt](./anotherProblem_input.txt)
-
-<!-- Add more problems here -->
-
 ## How to Use
 
 1. Clone this repository to your local machine.
