@@ -19,5 +19,5 @@ For example, if the problem name is "Apple Division", the input file will be nam
 1. Clone this repository to your local machine.
    
    ```bash
-   git clone https://github.com/your-username/CS50-Problem-Set-Solutions.git
+   git clone https://github.com/AbhikKhan/CSES_CPP.git
 
