@@ -9,6 +9,7 @@ using namespace std;
 #define vt vector
 #define PQ priority_queue
 #define UM unordered_map
+#define US unordered_set
 #define pb push_back
 #define F first
 #define S second
@@ -66,46 +67,19 @@ ostream& operator<<(ostream &ostream, const pair<U,V> &X){
 }
 
 /**************************************************************************************/
-ll missingCoinSum(vt<ll>& coins, ll n){
-    sort(all(coins));
-    ll target = 1, comp = 0, i = 0;
-    while(i< n){
-        if(coins[i] == target)target *= 2;
-        else{
-            if(coins[i] > target){
-                if(comp >= target){
-                    comp -= target;
-                    target *= 2;
-                    i--;
-                }
-                else return target + comp;
-            }
-            else{
-                comp += coins[i];
-                if(comp >= target){
-                    comp -= target;
-                    target *= 2;
-                }
-            }
-        }
-        // cout<<i<<" "<<target<<" "<<comp<<endl;
-        i++;
-    }
-    return target + comp;
-}
-
-
 void solve(){
-    ll n = 60;
-    // vt<ll> coins = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288, 1048576, 2097152, 4194304, 8388608, 16777216, 33554432, 67108864, 134217728, 268435456, 536870912, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000, 1000000000};
+    ll n;
     cin>>n;
-    vt<ll> coins(n);
-    cin>>coins;
-
-    cout<<missingCoinSum(coins, n)<<endl;
+    vt<ll> nums(n);
+    cin>>nums;
+    ll sum = INT_MIN, mSum = INT_MIN;
+    loopP(i,0,n){
+        sum += nums[i];
+        if(sum< nums[i])sum = nums[i];
+        mSum = max(mSum, sum);
+    }
+    cout<<mSum<<endl;
 }
-
-
 int main(){
     speed_;
     ll t = 1;

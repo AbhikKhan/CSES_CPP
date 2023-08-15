@@ -9,6 +9,7 @@ using namespace std;
 #define vt vector
 #define PQ priority_queue
 #define UM unordered_map
+#define US unordered_set
 #define pb push_back
 #define F first
 #define S second
@@ -21,7 +22,6 @@ using namespace std;
 
 #define all(x) (x).begin(), (x).end()
 #define fact(n) tgamma(n + 1)
-#define endl "\n"
 
 /* Declaration */
 ll gcd(ll a,ll b);
@@ -68,21 +68,28 @@ ostream& operator<<(ostream &ostream, const pair<U,V> &X){
 
 /**************************************************************************************/
 void solve(){
-    /*
-        Consider how many ways extra attack can be added when we go from ixi board to i+1 x i+1 board.
-        Consider extra row is added to the top and right and calculate extra attacks possible.    
-    */
-    ll n;
-    cin>>n;
-    vt<ll> res(n+1);
-    res[1] = 0, res[2] = 6, res[3] = 28, res[4] = 96;
-    ll i = 5, attack = 40;
-    while(i<= n){
-        attack += 10 + (i-4)*4 + 10 + (i-5)*4 + (i + i-1);
-        res[i] = i*i * (i*i + 1)/ 2 - attack;
-        i++;
+    ll n, target;
+    cin>>n>>target;
+    vt<pair<ll, ll>> t(n);
+    
+    loopP(i,0,n){
+        cin>>t[i].F;
+        t[i].S = i+1;
     }
-    for(ll k = 1; k<= n; ++k)cout<<res[k]<<"\n";
+
+    sort(all(t));
+    ll l = 0, r = n-1;
+
+    while(l< r){
+        ll val = t[l].F + t[r].F;
+        if(val == target){
+            cout<<t[l].S<<" "<<t[r].S<<endl;
+            return;
+        }
+        else if(val > target)r--;
+        else l++;
+    }
+    cout<<"IMPOSSIBLE\n";
 }
 int main(){
     speed_;
@@ -117,4 +124,3 @@ bool isPrime(ll n){
 
     return true;
 }
-

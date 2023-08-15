@@ -9,6 +9,7 @@ using namespace std;
 #define vt vector
 #define PQ priority_queue
 #define UM unordered_map
+#define US unordered_set
 #define pb push_back
 #define F first
 #define S second
@@ -69,13 +70,20 @@ ostream& operator<<(ostream &ostream, const pair<U,V> &X){
 void solve(){
     ll n;
     cin>>n;
-    ll sum1 = 0, sum2 = n * (n+1)/2;
-    ll k;
-    while(--n){
-        cin>>k;
-        sum1+=k;
+    vt<pair<ll, ll>> t(n);
+    cin>>t;
+
+    sort(all(t));
+    ll m = 1;
+    ll e = t[0].S;
+    loopP(i,1,n){
+        if(t[i].F >= e){
+            m++;
+            e = t[i].S;
+        }
+        else e = min(e, t[i].S);
     }
-    cout<<sum2-sum1<<endl;
+    cout<<m<<endl;
 }
 int main(){
     speed_;
@@ -110,4 +118,3 @@ bool isPrime(ll n){
 
     return true;
 }
-
