@@ -1,6 +1,6 @@
 # CSES Problem Set Solutions
 
-Welcome to my CSES Problem Set solutions repository! This repository contains my solutions to various problems from the CSES Problem Set. The solutions are implemented in C++14.
+Welcome to my CSES Problem Set solutions repository! This repository contains my solutions to various problems from the CSES Problem Set. The solutions are implemented in C++.
 
 ## Problem Naming Convention
 
