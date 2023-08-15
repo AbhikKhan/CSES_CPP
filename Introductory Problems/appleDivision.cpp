@@ -15,13 +15,12 @@ using namespace std;
 
 #define loopP(x,s,e) for(ll x = s; x< e; ++x)
 #define loopN(x,s,e) for(ll x = s; x> e; --x)
-#define loopA(x,e) for(auto &x: e)
+#define loopA(x,e) for(auto& x: e)
 #define loopIt(x,e) for(auto x = e.begin(); x != e.end(); x++)
 
 
 #define all(x) (x).begin(), (x).end()
 #define fact(n) tgamma(n + 1)
-#define endl "\n"
 
 /* Declaration */
 ll gcd(ll a,ll b);
@@ -67,22 +66,28 @@ ostream& operator<<(ostream &ostream, const pair<U,V> &X){
 }
 
 /**************************************************************************************/
+ll helper(vector<ll>& apples, ll ind, ll cSum, ll sum){
+    if(ind == apples.size()){
+        return abs(sum - 2*cSum);
+    }
+    ll notTaken = helper(apples, ind+1, cSum, sum);
+    ll taken = helper(apples, ind+1, cSum+apples[ind], sum);
+
+    return min(taken, notTaken);
+}
 void solve(){
-    /*
-        Consider how many ways extra attack can be added when we go from ixi board to i+1 x i+1 board.
-        Consider extra row is added to the top and right and calculate extra attacks possible.    
-    */
     ll n;
     cin>>n;
-    vt<ll> res(n+1);
-    res[1] = 0, res[2] = 6, res[3] = 28, res[4] = 96;
-    ll i = 5, attack = 40;
-    while(i<= n){
-        attack += 10 + (i-4)*4 + 10 + (i-5)*4 + (i + i-1);
-        res[i] = i*i * (i*i + 1)/ 2 - attack;
-        i++;
+    vt<ll> apples(n);
+    loopP(i, 0, n){
+        cin>>apples[i];
     }
-    for(ll k = 1; k<= n; ++k)cout<<res[k]<<"\n";
+    if(n == 1){
+        cout<<apples[0]<<endl;
+        return;
+    }
+    ll sum = accumulate(all(apples), 0LL);
+    cout<<helper(apples, 0, 0, sum)<<endl;
 }
 int main(){
     speed_;

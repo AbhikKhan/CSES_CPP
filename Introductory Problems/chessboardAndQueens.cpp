@@ -15,13 +15,12 @@ using namespace std;
 
 #define loopP(x,s,e) for(ll x = s; x< e; ++x)
 #define loopN(x,s,e) for(ll x = s; x> e; --x)
-#define loopA(x,e) for(auto &x: e)
+#define loopA(x,e) for(auto& x: e)
 #define loopIt(x,e) for(auto x = e.begin(); x != e.end(); x++)
 
 
 #define all(x) (x).begin(), (x).end()
 #define fact(n) tgamma(n + 1)
-#define endl "\n"
 
 /* Declaration */
 ll gcd(ll a,ll b);
@@ -67,22 +66,48 @@ ostream& operator<<(ostream &ostream, const pair<U,V> &X){
 }
 
 /**************************************************************************************/
-void solve(){
-    /*
-        Consider how many ways extra attack can be added when we go from ixi board to i+1 x i+1 board.
-        Consider extra row is added to the top and right and calculate extra attacks possible.    
-    */
-    ll n;
-    cin>>n;
-    vt<ll> res(n+1);
-    res[1] = 0, res[2] = 6, res[3] = 28, res[4] = 96;
-    ll i = 5, attack = 40;
-    while(i<= n){
-        attack += 10 + (i-4)*4 + 10 + (i-5)*4 + (i + i-1);
-        res[i] = i*i * (i*i + 1)/ 2 - attack;
-        i++;
+bool isPossible(ll x, ll y, vt<ll>& xy){
+    // x axis y axis
+    for(auto p: xy){
+        ll i = p>>4, j = p&15;
+        if(i == x || j == y)return false;
     }
-    for(ll k = 1; k<= n; ++k)cout<<res[k]<<"\n";
+    // left upper diagonal
+    ll xx = x, yy = y;
+    while(min(xx, yy)>= 0 && max(xx, yy)< 8){
+        ll p = xx<<4 | yy;
+        if(find(all(xy), p) != xy.end())return false;
+        xx--, yy--;
+    }
+    // right upper diagonal
+    xx = x, yy = y;
+    while(min(xx, yy)>= 0 && max(xx, yy)< 8){
+        ll p = xx<<4 | yy;
+        if(find(all(xy), p) != xy.end())return false;
+        xx--, yy++;
+    }
+    return true;
+}
+ll helper(vt<string>& board, ll ind, vt<ll>& xy){
+    if(ind == board.size())return 1;
+    ll res = 0;
+    for(ll i = 0; i< 8; ++i){
+        if(board[ind][i] == '.'){
+            if(isPossible(ind, i, xy)){
+                xy.push_back(ind<<4 | i);
+                res += helper(board, ind+1, xy);
+                xy.pop_back();
+            }
+        }
+    }
+    return res;
+}
+void solve(){
+    ll n = 8;
+    vt<string> board(n);
+    cin>>board;
+    vt<ll> xy;
+    cout<<helper(board, 0, xy)<<endl;
 }
 int main(){
     speed_;
