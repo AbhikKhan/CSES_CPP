@@ -68,30 +68,13 @@ ostream& operator<<(ostream &ostream, const pair<U,V> &X){
 /**************************************************************************************/
 ll missingCoinSum(vt<ll>& coins, ll n){
     sort(all(coins));
-    ll target = 1, comp = 0, i = 0;
+    ll range = 0, i = 0;
     while(i< n){
-        if(coins[i] == target)target *= 2;
-        else{
-            if(coins[i] > target){
-                if(comp >= target){
-                    comp -= target;
-                    target *= 2;
-                    i--;
-                }
-                else return target + comp;
-            }
-            else{
-                comp += coins[i];
-                if(comp >= target){
-                    comp -= target;
-                    target *= 2;
-                }
-            }
-        }
-        // cout<<i<<" "<<target<<" "<<comp<<endl;
+        if(coins[i] > range+1)return range+1;
+        else range+=coins[i];
         i++;
     }
-    return target + comp;
+    return range+1;
 }
 
 
