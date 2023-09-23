@@ -1,7 +1,4 @@
 #include<bits/stdc++.h>
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
-using namespace __gnu_pbds;
 using namespace std;
 
 #define speed_ ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL)
@@ -25,8 +22,6 @@ using namespace std;
 
 #define all(x) (x).begin(), (x).end()
 #define fact(n) tgamma(n + 1)
-
-template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
 /* Declaration */
 ll gcd(ll a,ll b);
@@ -73,19 +68,24 @@ ostream& operator<<(ostream &ostream, const pair<U,V> &X){
 
 /**************************************************************************************/
 void solve(){
-    ll n, k;
-    cin>>n>>k;
-    ll p = k%n;
-    oset<ll> pos;
-    loopP(i,1,n+1)pos.insert(i);
-    while(pos.size()){
-        int r = *pos.find_by_order(p) ;
-        pos.erase(r) ;  
-        if(pos.size())
-        p=(p+k)%pos.size() ;
-        cout << r << " " ;
+    int n, sum;
+    cin>>n>>sum;
+    vt<int> nums(n);
+    cin>>nums;
+    map<int, pair<int, int>> mp;
+    for(int i = n-1; i>= 0; --i){
+        for(int j = i-1; j>= 0; --j){
+            int rem = sum - nums[i] - nums[j];
+            if(mp.find(rem) != mp.end()){
+                cout<<j+1<<" "<<i+1<<" "<<mp[rem].F+1<<" "<<mp[rem].S+1<<endl;
+                return;
+            }
+        }
+        for(int j = i+1; j< n; ++j){
+            mp[nums[i]+nums[j]] = make_pair(i, j);
+        }
     }
-    cout<<endl;
+    cout<<"IMPOSSIBLE\n";
 }
 int main(){
     speed_;

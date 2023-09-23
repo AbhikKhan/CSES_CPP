@@ -1,7 +1,4 @@
 #include<bits/stdc++.h>
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
-using namespace __gnu_pbds;
 using namespace std;
 
 #define speed_ ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL)
@@ -16,6 +13,7 @@ using namespace std;
 #define pb push_back
 #define F first
 #define S second
+#define mp make_pair
 
 #define loopP(x,s,e) for(ll x = s; x< e; ++x)
 #define loopN(x,s,e) for(ll x = s; x> e; --x)
@@ -25,8 +23,6 @@ using namespace std;
 
 #define all(x) (x).begin(), (x).end()
 #define fact(n) tgamma(n + 1)
-
-template<class T> using oset =tree<T, null_type, less<T>, rb_tree_tag,tree_order_statistics_node_update> ;
 
 /* Declaration */
 ll gcd(ll a,ll b);
@@ -75,17 +71,17 @@ ostream& operator<<(ostream &ostream, const pair<U,V> &X){
 void solve(){
     ll n, k;
     cin>>n>>k;
-    ll p = k%n;
-    oset<ll> pos;
-    loopP(i,1,n+1)pos.insert(i);
-    while(pos.size()){
-        int r = *pos.find_by_order(p) ;
-        pos.erase(r) ;  
-        if(pos.size())
-        p=(p+k)%pos.size() ;
-        cout << r << " " ;
+    vt<ll> nums(n);
+    cin>>nums;
+    UM<ll, ll> hash;
+    hash[0] = 1;
+    ll res = 0, sum = 0;
+    loopP(i,0,n){
+        sum += nums[i];
+        res += hash[sum - k];
+        hash[sum]++;
     }
-    cout<<endl;
+    cout<<res<<endl;
 }
 int main(){
     speed_;
