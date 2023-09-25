@@ -66,93 +66,67 @@ ostream& operator<<(ostream &ostream, const pair<U,V> &X){
 }
 
 /**************************************************************************************/
-vector<ll> costSlidingWindow(vector<ll>& nums, ll k) {
-    // After getting the median of each k window calculate cost based on distance from the median
-    set<ll, function<bool(ll, ll)>> ms(
-        [&](ll i, ll j) {
-            return nums[i] == nums[j]? i< j: nums[i]< nums[j];
-        }
-    );
-    ll n = nums.size();
-    vector<ll> res;
-    bool b = k%2 == 1;
-    ll incrdcr = 0;
-    for(ll i = 0; i< k; ++i)ms.insert(i);
-    auto it = ms.begin();
-    for(ll i = 0; i< k/2; ++i){
-        incrdcr -= nums[*it];
-        it++;
-    }
-    if(b)it++;
-    for(ll i = 0; i< k/2; ++i){
-        incrdcr += nums[*it];
-    }
-    vector<ll> changes = {incrdcr};
-
-    ll med_ind = (k+1)/ 2;
-    auto med = ms.begin();
-    
-    for(ll i = 0; i< med_ind-1; ++i)med++;
-    
-    if(k%2 == 1)res.push_back(nums[*med]);
-    else{
-        auto next = med;
-        next++;
-        ll d = min(nums[*med], nums[*next]);
-        res.push_back(d);
-    }
-    
-    for(ll i = k; i< n; ++i){
-        ms.insert(i);
-        if(nums[i] >= nums[*med]){
-            if(nums[i-k] <= nums[*med]){
-                med++;
-            }
-        }
-        else{
-            if(nums[i-k] >= nums[*med]){
-                med--;
-            }
-            if(*med == i-k)med++;
-        }
-        
-        ms.erase(i-k);
-        
-        if(k%2 == 1)res.push_back(nums[*med]);
-        else{
-            auto next = med;
-            next++;
-            ll d = min(nums[*med], nums[*next]);
-            res.push_back(d);
-        }
-    }
-    for(ll i = 1; i< res.size(); ++i){
-        if(!b)incrdcr -= res[i-1];
-        // nums[i+k-1] is comming and nums[i-1] is going out
-        if(nums[i-1] != res[i-1]){
-            // the window holds the previous median which has no impact on sum previously
-            incrdcr += res[i-1] == res[i]? 0: res[i-1]> res[i]?res[i-1]:-res[i-1];
-            // nums[i-1] will be deleted from the window so adjust the sum
-            incrdcr += nums[i-1]> res[i-1]? -nums[i-1]: nums[i-1];  
-        }
-        if(nums[i+k-1] != res[i]){
-            // the incoming element is not median
-            incrdcr += nums[i+k-1] > res[i]? nums[i+k-1]: -nums[i+k-1];
-            incrdcr -= res[i] == res[i-1]? 0: res[i];
-        }
-        changes.push_back(incrdcr);
-    }
-    return changes;
-}
-
-
 void solve(){
+    // similar code for sliding median
     ll n, k;
     cin>>n>>k;
     vt<ll> nums(n);
     cin>>nums;
-    vt<ll> res = costSlidingWindow(nums, k);
-    cout<<res<<endl;
+
+    if(k == 1){
+        vt<ll> res(n, 0);
+        cout<<res<<endl;
+        return;
+    }
+    if(k == 2){
+        for(ll i = 1; i< n; ++i){
+            cout<<max(nums[i], nums[i-1]) - min(nums[i], nums[i-1])<<" ";
+        }
+        cout<<endl;
+        return;
+    }
+
+    set<pair<ll, ll>> left, right;
+    ll lSum = 0, rSum = 0;
+    vt<pair<ll, ll>> vec;
+    for(ll i = 0; i< k; ++i)vec.pb({nums[i], i});
+    sort(all(vec));
+    ll b = k%2;
+    for(ll i = 0; i< k/2+(k%2); ++i){
+        left.insert(vec[i]), lSum += vec[i].first;
+    }
+    for(ll i = k/2+(k%2); i< k; ++i){
+        right.insert(vec[i]), rSum += vec[i].first;
+    }
+    cout<<rSum - lSum + b*left.rbegin()->first<<" ";
+    for(ll i = 1; i< n-k+1; ++i){
+        if(left.count({nums[i-1], i-1}))
+            left.erase({nums[i-1], i-1}), lSum -= nums[i-1];
+        else
+            right.erase({nums[i-1], i-1}), rSum -= nums[i-1];
+        
+        if(*left.rbegin() < make_pair(nums[i+k-1], i+k-1))
+            right.insert({nums[i+k-1], i+k-1}), rSum += nums[i+k-1];
+        else
+            left.insert({nums[i+k-1], i+k-1}), lSum += nums[i+k-1];
+
+        while(left.size()< k/2+(k%2)){
+            pair<ll, ll> p = *right.begin();
+            right.erase(p);
+            rSum -= p.first;
+            left.insert(p);
+            lSum += p.first;
+        }
+        while(left.size()> k/2+(k%2)){
+            pair<ll, ll> p = *left.rbegin();
+            left.erase(p);
+            lSum -= p.first;
+            right.insert(p);
+            rSum += p.first;
+        }
+        cout<<rSum - lSum + b*left.rbegin()->first<<" ";
+    }
+    cout<<endl;
 }
 int main(){
     speed_;

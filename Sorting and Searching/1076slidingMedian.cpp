@@ -118,6 +118,61 @@ vector<ll> medianSlidingWindow(vector<ll>& nums, ll k) {
     return res;
 }
 
+void solve0(){
+    ll n, k;
+    cin>>n>>k;
+    vt<ll> nums(n);
+    cin>>nums;
+
+    if(k == 1){
+        cout<<nums<<endl;
+        return;
+    }
+    if(k == 2){
+        for(ll i = 1; i< n; ++i){
+            cout<<min(nums[i], nums[i-1])<<" ";
+        }
+        cout<<endl;
+        return;
+    }
+
+    set<pair<ll, ll>> left, right;
+    vt<pair<ll, ll>> vec;
+    for(ll i = 0; i< k; ++i)vec.pb({nums[i], i});
+    sort(all(vec));
+
+    for(ll i = 0; i< k/2+(k%2); ++i){
+        left.insert(vec[i]);
+    }
+    for(ll i = k/2+(k%2); i< k; ++i){
+        right.insert(vec[i]);
+    }
+    cout<<left.rbegin()->first<<" ";
+    for(ll i = 1; i< n-k+1; ++i){
+        if(left.count({nums[i-1], i-1}))
+            left.erase({nums[i-1], i-1});
+        else
+            right.erase({nums[i-1], i-1});
+        
+        if(*left.rbegin() < make_pair(nums[i+k-1], i+k-1))
+            right.insert({nums[i+k-1], i+k-1});
+        else
+            left.insert({nums[i+k-1], i+k-1});
+
+        while(left.size()< k/2+(k%2)){
+            pair<ll, ll> p = *right.begin();
+            right.erase(p);
+            left.insert(p);
+        }
+        while(left.size()> k/2+(k%2)){
+            pair<ll, ll> p = *left.rbegin();
+            left.erase(p);
+            right.insert(p);
+        }
+        cout<<left.rbegin()->first<<" ";
+    }
+    cout<<endl;
+}
 
 void solve(){
     ll n, k;
@@ -131,7 +186,7 @@ int main(){
     speed_;
     ll t = 1;
     // cin>>t;
-    while (t--)solve();
+    while (t--)solve0();
     return 0;
 }
 
